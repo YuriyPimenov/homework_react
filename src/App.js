@@ -1,32 +1,56 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {connect} from 'react-redux';
 import './App.css';
 
-import data from './data.js';
-console.log(data);
-var contacts= data;
+
 class App extends Component {
-  render() {
+    addContact(){
+        console.log('add',this.contactInput.value);
+        this.props.onAddContact(this.contactInput.value);
+        this.contactInput.value = '';
+    }
+    findTrack(){
+        console.log('search',this.searchInput.value);
+        this.props.onFindContact(this.searchInput.value);
+
+    }
+    render() {
+      console.log(this.props.testStore);
     return (
       <div className="book">
-        <div className="search">
-            <input type="text"/>
-        </div>
-        <div className="contacts">
-            {
-                contacts.map(function(el){
-                    return (
-                        <div>
-                            <span>{el.name}</span>
-                            <img width="100px" src={el.img} alt=""/>
-                        </div>
-                    )
-                })
-            }
-        </div>
+          <div>
+              <input type="text" ref={(input)=>{this.contactInput = input}}/>
+              <button onClick={this.addContact.bind(this)}>Добавить контакт</button>
+          </div>
+          <div>
+              <input type="text" ref={(input)=>{this.searchInput = input}}/>
+              <button onClick={this.findTrack.bind(this)}>Найти</button>
+          </div>
+          <ul>
+              {this.props.testStore.map((contact,index)=>
+                <li key={index}>{contact.name}</li>
+              )}
+          </ul>
       </div>
     );
-  }
+    }
 }
 
-export default App;
+export default connect(
+    state=>({
+        testStore:state.contacts//Наше хранилище
+    }),
+    dispatch=>({
+        onAddContact:(contact)=>{
+            const payload = {
+                id:Date.now().toString(),
+                name:contact
+            };
+            dispatch({type:'ADD_CONTACT',payload:payload})
+        },
+        onFindContact:(contact)=>{
+
+            dispatch({type:'FIND_CONTACT',payload:contact})
+        }
+    })
+)(App);
