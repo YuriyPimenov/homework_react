@@ -7,5 +7,8 @@ export default function contacts(state = data,action) {
             action.payload
         ];
     }
+    if(action.type==='FETCH_CONTACT_SUCCESS'){
+        return action.payload;
+    }
     return state;
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import './App.css';
-
+import {getContacts} from './actions/contacts'
 
 class App extends Component {
     addContact(){
@@ -26,6 +26,9 @@ class App extends Component {
               <input type="text" ref={(input)=>{this.searchInput = input}}/>
               <button onClick={this.findTrack.bind(this)}>Найти</button>
           </div>
+          <div>
+              <button onClick={this.props.onGetContacts}>Получить контакт</button>
+          </div>
           <ul>
               {this.props.testStore.map((contact,index)=>
                 <li key={index}>{contact.name}</li>
@@ -38,7 +41,7 @@ class App extends Component {
 
 export default connect(
     state=>({
-        testStore:state.contacts//Наше хранилище
+        testStore:state.contacts.filter(contact=>contact.name.includes(state.filterContacts))//Наше хранилище
     }),
     dispatch=>({
         onAddContact:(contact)=>{
@@ -51,6 +54,11 @@ export default connect(
         onFindContact:(contact)=>{
 
             dispatch({type:'FIND_CONTACT',payload:contact})
+        },
+        onGetContacts:()=>{
+
+
+            dispatch(getContacts());
         }
     })
 )(App);
