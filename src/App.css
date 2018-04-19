@@ -1,0 +1,7 @@
+.book{
+  display: grid;
+  grid-template-columns: 1fr;
+  text-align: center;
+  margin-top: 50px;
+
+}
